@@ -9,7 +9,7 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    message:{
+    work:{
         type: String,
         required: true
     },
