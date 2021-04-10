@@ -36,6 +36,25 @@ router.post("/register", (req, res) => {
        })
     })
 })
+
+
+router.post("/login", (req, res) => {
+    const {email, password} = req.body;
+    if(!email || !password){
+      return res.status(422).json({error: "Please fill the required fields."})
+    }
+
+    User.findOne({email: email, password: password}).then((userExists) => {
+        if(userExists && userExists.email === email && userExists.password === password){
+            return res.status(201).json({message: "User LoggedIn Successfully."})
+        }
+         return res.status(500).json({error: "User not Exists."})
+    }).catch(() => {
+        return res.status(500).json({error: "User not Exists."})
+    })
+
+})
+
 // using async await
 // router.post("/register", async (req, res) => {
 //     console.log(req.body)
@@ -61,4 +80,5 @@ router.post("/register", (req, res) => {
 //            console.log(err)
 //        }
 // })
+
 module.exports = router
