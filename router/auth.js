@@ -6,6 +6,8 @@ require("../db/conn")
 
 const User = require("../model")
 
+const bcrypt = require("bcrypt")
+
 router.get("/", (req, res) => {
 
    return res.send("INSIDE AUTH")
@@ -21,14 +23,21 @@ router.post("/register", (req, res) => {
       return res.status(422).json({error: "Please fill the required fields."})
     }
 
-    User.findOne({email: email}).then((userExists) => {
+    if(password !== confirm_password){
+      return res.status(422).json({error: "Please Enter Same Password in both fields."})
+    }
+
+    User.findOne({email: email}).then(async (userExists) => {
         if(userExists) {
           return res.status(422).json({error: "User Already Exists"})
         }
        const user = new User({
            name, email, phone, work, password, confirm_password
        })
-       
+
+       user.password = await bcrypt.hash(password, 12) 
+       user.confirm_password = await bcrypt.hash(confirm_password, 12) 
+
        user.save().then(() => {
           return res.status(201).json({message: "User Created Successfully."})
        }).catch(() => {
