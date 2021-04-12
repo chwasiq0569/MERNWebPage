@@ -66,6 +66,10 @@ router.post("/login", async (req, res) => {
     }
      bcrypt.compare(password, userExists.password).then((match) => {
         if (userExists.email === email && match) {
+
+            const token = userExists.generateAuthToken().then(token => console.log("TOKEN: ", token));
+            
+
             console.log(match)
             return res.status(201).json({ message: "User LoggedIn Successfully."});
           }
