@@ -67,11 +67,15 @@ router.post("/login", async (req, res) => {
      bcrypt.compare(password, userExists.password).then((match) => {
         if (userExists.email === email && match) {
 
-            const token = userExists.generateAuthToken().then(token => console.log("TOKEN: ", token));
-            
-
-            console.log(match)
-            return res.status(201).json({ message: "User LoggedIn Successfully."});
+           return userExists.generateAuthToken().then(token => {
+              res.cookie("jwttoken", token, {
+                expires: new Date(Date.now() + 25892000000),
+                httpOnly: true
+              })
+              console.log("TOKEN: ", token);
+              console.log(new Date(Date.now() + 25892000000))
+              return res.status(201).json({ message: "User LoggedIn Successfully."});
+            });
           }
           return res.status(500).json({ error: "Invalid Cradentials." });
         }).catch(() => {
@@ -79,6 +83,34 @@ router.post("/login", async (req, res) => {
      });
   });
 });
+
+// router.post("/login", async (req, res) => {
+//   const { email, password } = req.body;
+//   if (!email || !password) {
+//     return res.status(422).json({ error: "Please fill the required fields." });
+//   }
+
+//   User.findOne({ email: email }).then(async (userExists) => {
+//     if (!userExists) {
+//     return res.status(500).json({ error: "Invalid Cradentials." });
+//     }
+
+//     const match = await bcrypt.compare(password, userExists.password)
+
+//     if(!match){
+//       return res.status(500).json({ error: "Invalid Cradentials." });
+//     }
+//     if (userExists.email === email && match) {
+//            const token = await userExists.generateAuthToken();
+//            res.cookie("jwttoken", token, {
+//                 expires: new Date(Date.now() + 25892000000),
+//                 httpOnly: true
+//            })
+//            console.log(token)
+//     }
+//     return res.status(201).json({ message: "User LoggedIn Successfully."})
+//   });
+// });
 
 // using async await
 // router.post("/register", async (req, res) => {

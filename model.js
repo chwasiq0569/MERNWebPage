@@ -58,7 +58,6 @@ userSchema.methods.generateAuthToken = async function (){
     }catch(err){
         console.log(err)
     }
-    
 }
 
 const User = mongoose.model('USER', userSchema)

@@ -28,6 +28,7 @@ app.get("/contact", (req, res) => {
     }])
 })
 app.get("/temp", (req, res) => {
+    // res.cookie("TEST", "WASIQ")
     res.send("Temp Page")
 })
 
