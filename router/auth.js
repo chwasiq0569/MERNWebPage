@@ -66,7 +66,6 @@ router.post("/login", async (req, res) => {
     }
      bcrypt.compare(password, userExists.password).then((match) => {
         if (userExists.email === email && match) {
-
            return userExists.generateAuthToken().then(token => {
               res.cookie("jwttoken", token, {
                 expires: new Date(Date.now() + 25892000000),
